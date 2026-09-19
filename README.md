@@ -16,7 +16,8 @@ Vitest’s official regression test confirms that this scenario is significant a
 ## Environment
 
 - Repository: Vitest monorepo.
-- Investigated commit: `a0a939653` (`main`).
+- Investigated repository HEAD: `a0a939653` (`main`).
+- Fix commit identified during the investigation: `8e2108dda`.
 - Vitest: `5.0.1`.
 - Node.js: `v24.12.0`.
 - pnpm: `11.24.0`.
@@ -32,7 +33,7 @@ The scenario uses an aliased `~/dep` module and two test files:
 
 1. `a-factory.test.ts` registers a factory mock for `~/dep`.
 2. `b-automock.test.ts` registers `vi.mock(import('~/dep'))`.
-3. The files run with isolation disabled.
+3. The files were executed through a single worker slot with file isolation disabled.
 4. The automock file checks that the exports are mock functions and that `mockReturnValue` works.
 
 The local sandbox also tested both controlled orderings:
@@ -177,7 +178,7 @@ Results:
 
 In the factory-first case, the second file confirmed that the exports were mock functions and that `mockReturnValue` worked.
 
-This shows that the corrected behavior does not depend on accidental ordering or parallel scheduling.
+This shows that both controlled orderings pass on the corrected checkout and that the observed result was not caused by parallel scheduling in this run.
 
 ## History and limitations
 
